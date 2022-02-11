@@ -1,3 +1,4 @@
+import json
 import logging
 
 from os import getenv
@@ -5,9 +6,11 @@ from os import getenv
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler, Updater
 
+from crawlers.reddit import RedditCrawler
+
 
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-logging.basicConfig(format=log_format, level=logging.DEBUG)
+logging.basicConfig(format=log_format, level=logging.INFO)
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +20,13 @@ dispatcher = updater.dispatcher
 
 
 def nada_pra_fazer(update: Update, context: CallbackContext) -> None:
-    text = '<b>bold</b> <i>italic</i> <a href="http://google.com">link</a>.'
     chat_id = update.effective_chat.id
+    log.info(update.message.to_dict())
+    message = update.message.to_dict()["text"]
+    categories = message.split(" ")[-1].split(";")
+    crawler = RedditCrawler(categories, 5000)
+    text = json.dumps(crawler.content(), indent=4, sort_keys=True)
     context.bot.send_message(chat_id=chat_id,
-                             parse_mode=ParseMode.HTML,
                              text=text)
 
 
