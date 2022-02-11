@@ -2,7 +2,7 @@ import logging
 
 from os import getenv
 
-from telegram import Update
+from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler, Updater
 
 
@@ -19,7 +19,9 @@ dispatcher = updater.dispatcher
 def nada_pra_fazer(update: Update, context: CallbackContext) -> None:
     text = '<b>bold</b> <i>italic</i> <a href="http://google.com">link</a>.'
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id=chat_id, text=text)
+    context.bot.send_message(chat_id=chat_id,
+                             parse_mode=ParseMode.HTML,
+                             text=text)
 
 
 def start(update: Update, context: CallbackContext) -> None:
