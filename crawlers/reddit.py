@@ -34,18 +34,24 @@ class RedditCrawler:
 
         self.browser = webdriver.Firefox(service=service, options=options)
 
-    def content(self) -> dict:
-        data = defaultdict(list)
+    def _html_content(self) -> dict:
+        contents = defaultdict(str)
         for category in self._categories:
             self.browser.get(f"https://old.reddit.com/r/{category}")
-            content = html.fromstring(self.browser.page_source)
-            for thread in self._get_threads_by_score_limit(content):
+            contents[category] = self.browser.page_source
+        self.browser.close()
+        return contents
+
+    def content(self) -> dict:
+        data = defaultdict(list)
+        html_content = self._html_content()
+        for category in html_content:
+            for thread in self._get_hot_topics(html_content[category]):
                 thread["url"] = urljoin("https://reddit.com", thread["url"])
                 data[category].append(thread)
-        self.browser.close()
         return data
 
-    def _get_threads_by_score_limit(self, content) -> iter:
+    def _get_hot_topics(self, content) -> iter:
         xpath = "//div[@id='siteTable']/"\
                 "div[not(contains(@class, 'clearleft'))]"
         for thread in content.xpath(xpath)[:-1]:

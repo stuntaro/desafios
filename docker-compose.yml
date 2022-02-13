@@ -1,0 +1,13 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  crawlers_api:
+    build:
+      context: ./crawlers
+    ports:
+      - "8000:80"
+    volumes:
+      - ./crawlers:/opt/crawlers
+      - logvolume01:/var/log
+    command: "bash -c 'python api.py'"
+volumes:
+  logvolume01: {}
