@@ -1,22 +1,20 @@
-from quart import Quart, websocket, request
+import json
+
+from urllib.parse import unquote
+
+from flask import Flask, request
 
 from reddit import RedditCrawler
 
-app = Quart(__name__)
+app = Flask(__name__)
 
 
 @app.route("/redditer", methods=["GET"])
-async def json():
-    categories = request.args.get("categories").split()
-    crawler = RedditCrawler(categories, 5000)
-    return await crawler.content()
+def redditer():
+    categories = unquote(request.args.get("categories"))
+    crawler = RedditCrawler(categories.split(";"), 5000)
+    return json.dumps(crawler.content(), indent=4, sort_keys=True)
 
-
-@app.websocket("/ws")
-async def ws():
-    while True:
-        await websocket.send("hello")
-        await websocket.send_json({"hello": "world"})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8080, debug=True)

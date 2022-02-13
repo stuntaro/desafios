@@ -4,10 +4,21 @@ services:
     build:
       context: ./crawlers
     ports:
-      - "8000:80"
+      - "8080:8080"
     volumes:
       - ./crawlers:/opt/crawlers
       - logvolume01:/var/log
     command: "bash -c 'python api.py'"
+  bot:
+    build:
+      context: ./bot
+    volumes:
+      - ./bot:/opt/bot
+      - logvolume01:/var/log
+    command: "bash -c 'python redditer.py'"
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+    links:
+      - "crawlers_api"
 volumes:
   logvolume01: {}

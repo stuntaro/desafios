@@ -1,5 +1,6 @@
 import json
 import logging
+
 from time import time
 
 from lxml import html
@@ -30,7 +31,7 @@ class RedditCrawler:
         self._score = score
         options = Options()
         options.add_argument("--headless")
-        service = Service("/usr/local/bin/geckodriver")
+        service = Service("/usr/bin/geckodriver")
 
         self.browser = webdriver.Firefox(service=service, options=options)
 
@@ -46,7 +47,8 @@ class RedditCrawler:
         data = defaultdict(list)
         html_content = self._html_content()
         for category in html_content:
-            for thread in self._get_hot_topics(html_content[category]):
+            lxml = html.fromstring(html_content[category])
+            for thread in self._get_hot_topics(lxml):
                 thread["url"] = urljoin("https://reddit.com", thread["url"])
                 data[category].append(thread)
         return data
@@ -56,6 +58,8 @@ class RedditCrawler:
                 "div[not(contains(@class, 'clearleft'))]"
         for thread in content.xpath(xpath)[:-1]:
             try:
+                if len(thread.xpath("@data-score")) == 0:
+                    continue
                 score = int(thread.xpath("@data-score")[0])
                 if score < self._score:
                     continue
@@ -63,7 +67,7 @@ class RedditCrawler:
                 title_xpath = "div/div/p[@class='title']/a"\
                               "[@data-event-action='title']/text()"
                 title = thread.xpath(title_xpath)[0]
-                yield {"title": title, "score": score, "url": link}
+                yield {"title": str(title), "score": score, "url": link}
             except IndexError:
                 log.exception(html.tostring(thread))
 
