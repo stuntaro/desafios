@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 
@@ -19,7 +20,7 @@ log = logging.getLogger(__name__)
 
 
 def write_json(content: dict) -> None:
-    file_name = f"/var/tmp/{time()}.json"
+    file_name = f"{time()}.json"
     with open(file_name, "w") as f:
         f.write(json.dumps(content, indent=4, sort_keys=True))
 
@@ -73,5 +74,8 @@ class RedditCrawler:
 
 
 if __name__ == "__main__":
-    crawler = RedditCrawler(["askreddit", "worldnews", "cats"], 5000)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("categories")
+    args = parser.parse_args()
+    crawler = RedditCrawler(args.categories.split(";"), 5000)
     write_json(crawler.content())
