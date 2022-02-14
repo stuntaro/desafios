@@ -44,7 +44,7 @@ class RedditCrawler:
         contents = defaultdict(str)
         for category in self._categories:
             browser.get(f"https://old.reddit.com/r/{category}")
-            contents[category] = self.browser.page_source
+            contents[category] = browser.page_source
         browser.quit()
         return contents
 
