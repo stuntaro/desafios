@@ -10,17 +10,21 @@ Não há diferença de testes para diferentes níveis de profissionais, porém o
 
 ## Rodar o desafios do crawler
 Você deve ter instalado em sua maquina **docker**, **docker-compose**, **makefile**
-`make build`
-`make up`
-`make tests`
-`make reddit_search category=cat score=5000`
-`make down`
+```sh
+make build
+make up
+make tests`
+make reddit_search category=cat score=5000`
+make down
+```
 
 ## Desafio das strings
 Você deve ter instalado em sua maquina **python3+**
-`python strings/string_formatter.py {input_file_path}`
-`python strings/string_formatter.py {input_file_path} --justify=True`
-`python strings/string_formatter.py {input_file_path} --limit=50`
+```sh
+python strings/string_formatter.py input_file_path
+python strings/string_formatter.py input_file_path --justify=True
+python strings/string_formatter.py input_file_path --limit=50
+```
 ### Extras
 
 - Descreva o processo de resolução dos desafios;
