@@ -11,6 +11,7 @@ Não há diferença de testes para diferentes níveis de profissionais, porém o
 ## Rodar o desafios do crawler
 Você deve ter instalado em sua maquina **docker**, **docker-compose**, **makefile**
 ```sh
+export TELEGRAM_TOKEN=SEU_TOKEN
 make build
 make up
 make tests
