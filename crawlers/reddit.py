@@ -2,11 +2,9 @@ import argparse
 import json
 import logging
 
-from time import time
-
 from lxml import html
 from collections import defaultdict
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -18,12 +16,6 @@ log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(format=log_format, level=logging.DEBUG)
 
 log = logging.getLogger(__name__)
-
-
-def write_json(content: dict) -> None:  # pragma: no cover
-    file_name = f"{time()}.json"
-    with open(file_name, "w") as f:
-        f.write(json.dumps(content, indent=4, sort_keys=True))
 
 
 class RedditCrawler:
@@ -55,6 +47,8 @@ class RedditCrawler:
             lxml = html.fromstring(html_content[category])
             for thread in self._get_hot_topics(lxml):
                 thread["url"] = urljoin("https://reddit.com", thread["url"])
+                comments = urlparse(thread["comments"]).path
+                thread["comments"] = urljoin("https://reddit.com", comments)
                 data[category].append(thread)
         return data
 
@@ -71,14 +65,19 @@ class RedditCrawler:
                 title_xpath = "div/div/p[@class='title']/a"\
                               "[@data-event-action='title']/text()"
                 title = thread.xpath(title_xpath)[0]
-                yield {"title": str(title), "score": score, "url": link}
+                comments_xpath = "div/div/ul/li/a"\
+                                 "[@data-event-action='comments']/@href"
+                comments = thread.xpath(comments_xpath)[0]
+                yield {"title": str(title), "score": score,
+                       "url": link, "comments": comments}
             except IndexError:
                 log.exception(html.tostring(thread))
 
 
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
-    parser.add_argument("categories")
+    parser.add_argument("subs")
+    parser.add_argument("--score", default=5000, type=int)
     args = parser.parse_args()
-    crawler = RedditCrawler(args.categories.split(";"), 5000)
-    write_json(crawler.content())
+    crawler = RedditCrawler(args.subs.split(), int(args.score))
+    print(json.dumps(crawler.content(), indent=4, sort_keys=True))

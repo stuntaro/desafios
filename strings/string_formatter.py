@@ -1,3 +1,4 @@
+import argparse
 import textwrap
 
 
@@ -31,6 +32,12 @@ class StringFormater:
 
 
 if __name__ == "__main__":
-    text = """In the beginning God created the heavens and the earth. Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.\nAnd God said, "Let there be light," and there was light. God saw that the light was good, and he separated the light from the darkness. God called the light "day," and the darkness he called "night." And there was evening, and there was morning - the first day."""
-    formatter = StringFormater(True, 40)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path")
+    parser.add_argument("--limit", default=40, type=int)
+    parser.add_argument("--justify", default=False, type=bool)
+    args = parser.parse_args()
+    with open(args.path) as f:
+        text = f.read()
+    formatter = StringFormater(args.justify, args.limit)
     print(formatter.wrap_text(text))

@@ -8,15 +8,20 @@ Não há diferença de testes para diferentes níveis de profissionais, porém o
 1. [Manipulação de strings](https://github.com/idwall/desafios/tree/master/strings)
 2. [Crawlers](https://github.com/idwall/desafios/tree/master/crawlers)
 
-## Como entregar estes desafios
-Você deve forkar este projeto e fazer o *push* no seu próprio repositório e enviar o link para _jobs@idwall.co_ ou para o email do recrutador, junto com seu LinkedIn atualizado.
-
-A implementação deve ficar na pasta correspondente ao desafio. Fique à vontade para adicionar qualquer tipo de conteúdo que julgue útil ao projeto, alterar/acrescentar um README com instruções de como executá-lo, etc.
-
-**Obs.**:
-- Você não deve fazer um Pull Request para este projeto!
-- Utilizar as versões mais atuais da linguagem que escolher para desenvolver (JavaScript ES6+; Java 8; Python 3, etc).
-
+## Rodar o desafios do crawler
+Você deve ter instalado em sua maquina *docker, docker-compose, makefile*
+`make build
+ make up
+ make tests
+ make reddit_search category=cat score=5000
+ make down
+`
+## Desafio das strings
+Você deve ter instalado em sua maquina *python3+*
+`python strings/string_formatter.py {input_file_path}
+ python strings/string_formatter.py {input_file_path} --justify=True
+ python strings/string_formatter.py {input_file_path} --limit=50
+`
 ### Extras
 
 - Descreva o processo de resolução dos desafios;

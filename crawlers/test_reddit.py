@@ -28,7 +28,8 @@ class TestRedditCrawler(TestCase):
     def test_content(self, html_content: Mock, hot_topics: Mock) -> None:
         html_content.return_value = {"cats": "<string>aaa</string>"}
         hot_topics.return_value = [
-            {"title": 'lalalala', "score": 5000, "url": "/cats"}
+            {"title": 'lalalala', "score": 5000,
+             "url": "/cats", "comments": "/adsad"}
         ]
         crawler = RedditCrawler(['cats'], 100)
         content = crawler.content()
