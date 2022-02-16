@@ -20,7 +20,7 @@ logging.basicConfig(format=log_format, level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
-def write_json(content: dict) -> None:
+def write_json(content: dict) -> None:  # pragma: no cover
     file_name = f"{time()}.json"
     with open(file_name, "w") as f:
         f.write(json.dumps(content, indent=4, sort_keys=True))
@@ -58,7 +58,7 @@ class RedditCrawler:
                 data[category].append(thread)
         return data
 
-    def _get_hot_topics(self, content) -> iter:
+    def _get_hot_topics(self, content) -> iter:  # pragma: no cover
         xpath = "//div[@id='siteTable']/"\
                 "div[not(contains(@class, 'clearleft'))]"
         for thread in content.xpath(xpath)[:-1]:
@@ -76,7 +76,7 @@ class RedditCrawler:
                 log.exception(html.tostring(thread))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument("categories")
     args = parser.parse_args()
