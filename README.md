@@ -13,8 +13,8 @@ Você deve ter instalado em sua maquina **docker**, **docker-compose**, **makefi
 ```sh
 make build
 make up
-make tests`
-make reddit_search category=cat score=5000`
+make tests
+make reddit_search category=cat score=5000
 make down
 ```
 
