@@ -21,10 +21,12 @@ class StringFormater:
     def _align_string(self, line: str) -> str:
         items = line.strip().split()
 
+        if len(items) == 1:
+            return line.strip()
         white_space = self._width - (len(line) - len(items))
         while white_space > 0:
             for i, _ in enumerate(items[:-1]):
-                items[i] += " "
+                items[i] = f"{items[i]} "
                 white_space -= 1
                 if white_space < 1:
                     break
